@@ -3,35 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TimeBank Pro - দক্ষতা ও চ্যাট প্ল্যাটফর্ম</title>
+    <title>TimeBank - Find & Help</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; transition: 0.3s; }
-        .page-content { display: none; animation: fadeIn 0.4s ease; }
+        body { font-family: 'Hind Siliguri', sans-serif; }
+        .page-content { display: none; }
         .page-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .chat-container { height: calc(100vh - 200px); }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50">
 
-    <nav class="bg-white shadow-sm sticky top-0 z-50 px-4 py-3">
+    <nav class="bg-white shadow-sm sticky top-0 z-50 p-4">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
-                <i class="fa-solid fa-bolt-lightning text-indigo-600 text-2xl"></i>
-                <span class="text-xl font-bold tracking-tighter">TimeBank</span>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="bg-indigo-100 px-3 py-1 rounded-full text-indigo-600 font-bold">
-                    ⏳ <span id="balance">5.0</span>h
-                </div>
-                <button onclick="showPage('chat')" class="relative p-2 text-gray-600">
-                    <i class="fa-solid fa-message text-xl"></i>
-                    <span class="absolute top-0 right-0 bg-red-500 w-2 h-2 rounded-full"></span>
-                </button>
+            <h1 class="text-2xl font-bold text-indigo-600 cursor-pointer" onclick="showPage('home')">TimeBank</h1>
+            <div class="flex gap-4">
+                <button onclick="showPage('chat')" class="text-gray-600"><i class="fa-solid fa-comments text-xl"></i></button>
+                <div class="bg-indigo-100 px-3 py-1 rounded-full text-indigo-700 font-bold">⏳ <span id="bal">5.0</span>h</div>
             </div>
         </div>
     </nav>
@@ -39,137 +28,81 @@
     <main class="max-w-6xl mx-auto p-4 mb-20">
         
         <section id="home" class="page-content active">
-            <div class="bg-indigo-600 rounded-3xl p-8 text-white mb-8">
-                <h1 class="text-3xl font-bold mb-2">অন্যকে সাহায্য করুন, <br>নিজে নতুন কিছু শিখুন!</h1>
-                <p class="opacity-80">আপনার কাছে টাকা নেই? সমস্যা নেই! আপনার দক্ষতাই এখানে কারেন্সি।</p>
-            </div>
-            
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold">সার্ভিস ক্যাটাগরি</h2>
-                <button onclick="showPage('post')" class="text-indigo-600 font-semibold">+ নতুন পোস্ট</button>
+            <div class="mb-6">
+                <input type="text" id="searchInput" onkeyup="searchPeople()" placeholder="কার কাছে কি শিখবেন? নাম বা বিষয় দিয়ে খুঁজুন..." class="w-full p-4 rounded-2xl shadow-sm border-none ring-1 ring-gray-200 outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             
             <div id="serviceGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 </div>
         </section>
 
-        <section id="post" class="page-content">
-            <div class="max-w-lg mx-auto bg-white p-6 rounded-3xl shadow-lg">
-                <h2 class="text-2xl font-bold mb-6 text-center">সার্ভিস পোস্ট করুন</h2>
-                <input type="text" id="sTitle" placeholder="কি শিখাতে চান?" class="w-full mb-4 p-4 bg-gray-100 rounded-2xl border-none outline-none">
-                <input type="number" id="sTime" placeholder="কত সময় লাগবে? (ঘণ্টা)" class="w-full mb-6 p-4 bg-gray-100 rounded-2xl border-none outline-none">
-                <button onclick="publishService()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold">পাবলিশ করুন</button>
-            </div>
-        </section>
-
         <section id="chat" class="page-content">
-            <div class="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
-                <div class="bg-indigo-600 p-4 text-white flex items-center gap-3">
-                    <i class="fa-solid fa-circle-user text-3xl"></i>
-                    <div>
-                        <h3 class="font-bold">কমিউনিটি চ্যাট</h3>
-                        <p class="text-xs opacity-70">সবাই এখানে কথা বলতে পারে</p>
-                    </div>
-                </div>
-                <div id="chatBox" class="chat-container overflow-y-auto p-4 space-y-4 bg-gray-50">
-                    </div>
+            <div class="max-w-xl mx-auto bg-white rounded-3xl shadow-lg overflow-hidden">
+                <div id="chatWith" class="bg-indigo-600 p-4 text-white font-bold text-center">ইনবক্স</div>
+                <div id="chatBox" class="h-80 overflow-y-auto p-4 space-y-3 bg-gray-50"></div>
                 <div class="p-4 border-t flex gap-2">
-                    <input type="text" id="chatInput" placeholder="কিছু লিখুন..." class="flex-1 p-3 bg-gray-100 rounded-xl outline-none">
-                    <button onclick="sendMessage()" class="bg-indigo-600 text-white px-6 rounded-xl">
-                        <i class="fa-solid fa-paper-plane"></i>
-                    </button>
+                    <input type="text" id="msgInput" placeholder="আপনার বার্তা লিখুন..." class="flex-1 p-3 bg-gray-100 rounded-xl outline-none">
+                    <button onclick="sendMsg()" class="bg-indigo-600 text-white px-5 rounded-xl"><i class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t py-4 flex justify-around md:hidden">
-        <button onclick="showPage('home')" class="text-gray-400 focus:text-indigo-600"><i class="fa-solid fa-house text-xl"></i></button>
-        <button onclick="showPage('post')" class="text-indigo-600"><i class="fa-solid fa-circle-plus text-3xl"></i></button>
-        <button onclick="showPage('chat')" class="text-gray-400 focus:text-indigo-600"><i class="fa-solid fa-message text-xl"></i></button>
-    </div>
-
     <script>
-        // Data Store
-        let services = JSON.parse(localStorage.getItem('services')) || [
-            { id: 1, user: "রাকিব", title: "গ্রাফিক ডিজাইন", time: 1.5 },
-            { id: 2, user: "সুমাইয়া", title: "স্পোকেন ইংলিশ", time: 1.0 }
+        // ডায়নামিক ডাটাবেস (নমুনা)
+        let users = [
+            { id: 1, name: "রাকিব হাসান", skill: "গণিত টিউটর", phone: "017XXXXXXXX" },
+            { id: 2, name: "সুমাইয়া মিম", skill: "রান্না ও বেকিং", phone: "018XXXXXXXX" },
+            { id: 3, name: "আরিফ আহমেদ", skill: "কম্পিউটার টাইপিং", phone: "019XXXXXXXX" }
         ];
-        let messages = JSON.parse(localStorage.getItem('messages')) || [];
-        let balance = 5.0;
 
-        // Navigation
+        let activeChatUser = "";
+
         function showPage(id) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            if(id === 'home') renderServices();
-            if(id === 'chat') renderChat();
+            if(id === 'home') loadUsers(users);
         }
 
-        // Render Services
-        function renderServices() {
+        function loadUsers(data) {
             const grid = document.getElementById('serviceGrid');
-            grid.innerHTML = services.map(s => `
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                    <div class="flex justify-between mb-4">
-                        <span class="text-xs font-bold text-indigo-500 uppercase">Expert</span>
-                        <span class="text-gray-400 text-xs">⌛ ${s.time}h</span>
+            grid.innerHTML = data.map(u => `
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold mb-3">${u.name[0]}</div>
+                    <h3 class="font-bold text-lg">${u.name}</h3>
+                    <p class="text-gray-500 text-sm mb-4">দক্ষতা: ${u.skill}</p>
+                    <div class="flex gap-2">
+                        <button onclick="startChat('${u.name}')" class="flex-1 bg-indigo-600 text-white py-2 rounded-xl text-sm font-bold">চ্যাট করুন</button>
+                        <a href="https://wa.me/${u.phone}" target="_blank" class="bg-green-500 text-white px-4 py-2 rounded-xl"><i class="fa-brands fa-whatsapp"></i></a>
                     </div>
-                    <h3 class="text-lg font-bold mb-1">${s.title}</h3>
-                    <p class="text-sm text-gray-500 mb-4">প্রদানকারী: ${s.user}</p>
-                    <button onclick="requestService(${s.id})" class="w-full py-2 bg-indigo-50 text-indigo-600 rounded-xl font-semibold hover:bg-indigo-600 hover:text-white transition">রিকোয়েস্ট</button>
                 </div>
             `).join('');
         }
 
-        // Publish Service
-        function publishService() {
-            const title = document.getElementById('sTitle').value;
-            const time = document.getElementById('sTime').value;
-            if(!title || !time) return alert("সব তথ্য দিন");
-
-            services.unshift({ id: Date.now(), user: "আপনি", title, time });
-            localStorage.setItem('services', JSON.stringify(services));
-            alert("সফলভাবে পোস্ট হয়েছে!");
-            showPage('home');
+        // সার্চ ফাংশন
+        function searchPeople() {
+            let term = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = users.filter(u => u.name.toLowerCase().includes(term) || u.skill.toLowerCase().includes(term));
+            loadUsers(filtered);
         }
 
-        // Chat Logic
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            if(!input.value) return;
-
-            const msg = { text: input.value, time: new Date().toLocaleTimeString(), sender: 'আপনি' };
-            messages.push(msg);
-            localStorage.setItem('messages', JSON.stringify(messages));
-            input.value = '';
-            renderChat();
+        // চ্যাট শুরু করা
+        function startChat(userName) {
+            activeChatUser = userName;
+            document.getElementById('chatWith').innerText = userName + "-এর সাথে চ্যাট";
+            showPage('chat');
+            document.getElementById('chatBox').innerHTML = `<p class="text-center text-gray-400 text-xs mt-10">আপনি ${userName}-কে রিকোয়েস্ট পাঠিয়েছেন।</p>`;
         }
 
-        function renderChat() {
-            const chatBox = document.getElementById('chatBox');
-            chatBox.innerHTML = messages.map(m => `
-                <div class="flex flex-col ${m.sender === 'আপনি' ? 'items-end' : 'items-start'}">
-                    <div class="${m.sender === 'আপনি' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-800'} p-3 rounded-2xl max-w-[80%] shadow-sm">
-                        <p class="text-sm">${m.text}</p>
-                    </div>
-                    <span class="text-[10px] text-gray-400 mt-1">${m.time}</span>
-                </div>
-            `).join('');
-            chatBox.scrollTop = chatBox.scrollHeight;
+        function sendMsg() {
+            let val = document.getElementById('msgInput').value;
+            if(!val) return;
+            document.getElementById('chatBox').innerHTML += `<div class="text-right"><span class="bg-indigo-600 text-white p-2 rounded-2xl inline-block text-sm">${val}</span></div>`;
+            document.getElementById('msgInput').value = "";
         }
 
-        function requestService(id) {
-            const service = services.find(s => s.id === id);
-            if(confirm(`${service.title} নিতে ${service.time} ঘণ্টা চার্জ কাটা হবে। রাজি?`)) {
-                alert(`আপনার রিকোয়েস্ট ${service.user}-এর কাছে পাঠানো হয়েছে। চ্যাট বক্সে যোগাযোগ করুন।`);
-                showPage('chat');
-            }
-        }
-
-        // Init
-        renderServices();
+        window.onload = () => loadUsers(users);
     </script>
 </body>
-  </html>
+</html>
